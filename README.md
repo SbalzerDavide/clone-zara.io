@@ -1,2 +1,2 @@
-clone-zara
+clone sito di Zara.
 versione solo desktop.

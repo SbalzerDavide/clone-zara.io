@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>   -->
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <!-- icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <!-- style -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/styles.css">
+    <title>Clone Zara</title>
+</head>
+<body>
+
+    <div id="app">
+        <header class="flex"
+        ref="vw">
+            <div class="logo">
+                <i class="fas fa-bars"></i>
+
+                <img src="./img/logo.png" alt="logo">
+            </div>
+            <div class="search flex">
+                <div class="search-text">CERCA</div>
+                <div class="search-line"></div>
+            </div>
+            <div class="user">
+                <ul>
+                    <li>
+                        login
+                    </li>
+                    <li>
+                        supporto
+                    </li>
+                    <li>
+                        <i class="fas fa-shopping-cart"></i>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <div class="arrow-left pointer" @click="goLeft" v-if="menu[actualXindex -1]">
+            <i class="fas fa-chevron-left"></i>
+            {{ menu[actualXindex -1].name }}
+        </div>
+        <div class="arrow-right pointer" @click="goRight" v-if="menu[actualXindex +1].sub">
+            <i class="fas fa-chevron-right"></i>
+            {{ menu[actualXindex + 1].name }}
+        </div>
+        <nav 
+        @mouseover="showMenu"
+        @mouseleave="hideMenu"
+        ref="vh"
+        >
+            <div 
+            class="menu"
+            :class="menuShow ? 'show-menu' : ''"
+            >
+                <ul class="flex">
+                    <li v-for="element in menu" 
+                    class="pointer"
+                    :class="element.special ? 'special' : ''"
+                    >
+                        {{ element.name }}
+                        <div v-if="element.special" class="square"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main ref="main" @scroll="readIndex">
+            <div class="wrapper" :style="`width:${totalWidth}px`">
+
+                <div
+                @scroll="readIndex"
+                :ref="horizontal.name"
+                class="horizontal"
+                v-for="(horizontal, index) in menu"
+                v-if="horizontal.sub"
+                >
+                    <div class="index-point" v-if="index === actualXindex">
+                        <ul>
+                            <li 
+                            v-for="(n, indexY) in horizontal.sub.length" class="pointer"
+                            @click="setIndex(horizontal.name, indexY)"
+                            >
+                                <i class="fas fa-circle" v-if="indexY === actualYindex[actualXindex].indexY"></i>
+                                <i class="far fa-circle" v-else></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                    class="vertical"
+                    v-for="vertical in horizontal.sub"
+                    :style="`background-image:url(./img/${vertical.img});`"
+                    >
+                        <div  
+                        class="content flex"
+                        :class="vertical.name">
+                            <h2 v-if="vertical.title">{{ vertical.title }}</h2>
+                            <p v-if="vertical.title">{{ vertical.text}}</p>
+                            <button class="btn" v-if="vertical.title">view</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+    
+
+
+
+    <script src="./js/main.js"></script>
+</body>
+</html>
